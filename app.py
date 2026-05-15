@@ -1,7 +1,10 @@
 from flask import Flask, render_template, request
+import requests
 import os
 
 app = Flask(__name__)
+
+API_KEY = os.getenv("OPENROUTER_API_KEY")
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -11,22 +14,49 @@ def home():
     topic = ""
 
     if request.method == "POST":
+
         topic = request.form["topic"]
 
-        answer = f"""
-        <h2>Тема: {topic}</h2>
+        prompt = f"""
+Ты умный преподаватель.
 
-        <p>
-        Это демонстрационная версия сайта.
-        AI временно отключен для Render.
-        </p>
+Подробно и понятно объясни тему:
 
-        <p>
-        Позже можно подключить настоящий AI.
-        </p>
-        """
+{topic}
 
-    return render_template("index.html", answer=answer, topic=topic)
+Структура:
+- Введение
+- Основная часть
+- Интересные факты
+- Вывод
+"""
+
+        response = requests.post(
+            url="https://openrouter.ai/api/v1/chat/completions",
+            headers={
+                "Authorization": f"Bearer {API_KEY}",
+                "Content-Type": "application/json"
+            },
+            json={
+                "model": "deepseek/deepseek-chat",
+                "messages": [
+                    {
+                        "role": "user",
+                        "content": prompt
+                    }
+                ]
+            }
+        )
+
+        data = response.json()
+
+        answer = data["choices"][0]["message"]["content"]
+
+    return render_template(
+        "index.html",
+        answer=answer,
+        topic=topic
+    )
 
 
 if __name__ == "__main__":
