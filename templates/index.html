@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>NoteAI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>🧠 NoteAI</h1>
+        <p>AI объясняет любые темы</p>
+    </div>
+
+    <form method="POST" class="input-box">
+        <textarea name="topic" placeholder="Например: Война 1941 года" required></textarea>
+        <button type="submit">🚀 Сгенерировать</button>
+    </form>
+
+    {% if answer %}
+
+    <div class="chat">
+
+        <div class="message user">
+            {{ topic }}
+        </div>
+
+        <div class="message ai">
+            {{ answer }}
+        </div>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+</body>
+</html>
