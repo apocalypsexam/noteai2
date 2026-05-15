@@ -50,7 +50,12 @@ def home():
 
         data = response.json()
 
-        answer = data["choices"][0]["message"]["content"]
+        print(data)
+
+        if "choices" in data:
+            answer = data["choices"][0]["message"]["content"]
+        else:
+            answer = f"Ошибка AI: {data}"
 
     return render_template(
         "index.html",
