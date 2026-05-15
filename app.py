@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 import requests
 import os
+import markdown
 
 app = Flask(__name__)
 
@@ -29,6 +30,11 @@ def home():
 - Основная часть
 - Интересные факты
 - Вывод
+
+Используй:
+- заголовки
+- списки
+- красивое оформление
 """
 
         response = requests.post(
@@ -53,9 +59,17 @@ def home():
         print(data)
 
         if "choices" in data:
-            answer = data["choices"][0]["message"]["content"]
+
+            raw_answer = data["choices"][0]["message"]["content"]
+
+            answer = markdown.markdown(raw_answer)
+
         else:
-            answer = f"Ошибка AI: {data}"
+
+            answer = f"""
+            <h2>Ошибка AI</h2>
+            <p>{data}</p>
+            """
 
     return render_template(
         "index.html",
