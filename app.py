@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request
 import os
-import ollama
 
 app = Flask(__name__)
 
@@ -14,30 +13,18 @@ def home():
     if request.method == "POST":
         topic = request.form["topic"]
 
-        prompt = f"""
-Ты — умный преподаватель.
+        answer = f"""
+        <h2>Тема: {topic}</h2>
 
-Объясни тему подробно и понятно школьнику:
+        <p>
+        Это демонстрационная версия сайта.
+        AI временно отключен для Render.
+        </p>
 
-{topic}
-
-Структура:
-- Введение
-- Основная часть (по пунктам)
-- Интересные факты
-- Вывод
-
-Пиши красиво, с абзацами.
-"""
-
-        response = ollama.chat(
-            model="llama3",
-            messages=[
-                {"role": "user", "content": prompt}
-            ]
-        )
-
-        answer = response["message"]["content"]
+        <p>
+        Позже можно подключить настоящий AI.
+        </p>
+        """
 
     return render_template("index.html", answer=answer, topic=topic)
 
